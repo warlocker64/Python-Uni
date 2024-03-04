@@ -161,8 +161,9 @@ def nordtabellgraf(list5,medel,länder): #skapar Nordgraf
     plt.plot(nyår, medel,label="medel")
     plt.xlabel("År")
     plt.ylabel("Poäng")
-    plt.title("PISA-undersökningen 2003 – 2018") 
-    plt.grid(True)
+    plt.title("PISA-undersökningen 2003 – 2018")
+    plt.grid(color = 'black') 
+    plt.gca().set_facecolor('lightblue')
     plt.legend()
     plt.show()
 
