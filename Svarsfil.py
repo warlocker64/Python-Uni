@@ -45,13 +45,12 @@ def meny(): # Använder whileloop för att skapa en meny.
             år2018(pisadata, 13)
             
         elif val ==3:
-            arsmedel(pisadata)
             nordländer = nordland(pisadata)
             medelvAr = (arsmedel(pisadata))
-            nordtabell(pisadata,medelvAr,nordländer)
-            nordtabellgraf(pisadata,medelvAr,nordländer)
+            nordtabell(medelvAr,nordländer)
+            nordtabellgraf(medelvAr,nordländer)
+            pisadata= read_file(filnamn)
   
-            
         elif val ==4:
             battresamre(pisadata, True)  # För länder som har förbättrat sina resultat
             battresamre(pisadata, False) # För länder som har försämrat sina resultat
@@ -120,7 +119,7 @@ def arsmedel(list2):#Funktion för medelvärdet mellan 2003 till 2019
         armedel.append(medelvärdet)
     return armedel
 
-def nordtabell(list4,medel,länder):#Skapar Nordtabell 
+def nordtabell(medel,länder):#Skapar Nordtabell 
     arsmedel2 = medel
     flipdata = länder
     data = [] 
@@ -141,8 +140,8 @@ def nordtabell(list4,medel,länder):#Skapar Nordtabell
     for år, flipdata2, arsmedel2 in zip(år, flipdata2, arsmedel2): 
         flipdata2_str = ' '.join(number + ' '*3 for number in flipdata2)
         print(f"{år}   {flipdata2_str}                   {arsmedel2}")
-    
-def nordtabellgraf(list5,medel,länder): #skapar Nordgraf 
+
+def nordtabellgraf(medel,länder): #skapar Nordgraf 
     arsmedel2 = medel
     nländer = länder
     nyår = [2018,2015,2012,2009,2006,2003]
@@ -166,6 +165,7 @@ def nordtabellgraf(list5,medel,länder): #skapar Nordgraf
     plt.gca().set_facecolor('lightblue')
     plt.legend()
     plt.show()
+    
 
 def kvinna_man(list2):
     listamf = []
