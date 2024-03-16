@@ -3,13 +3,6 @@
 # Placera dina modulimpoter här:
 import matplotlib.pyplot as plt
 import csv
-def read_file(filnamn):
-    pisadata=[]
-    with open (filnamn, "r") as file: #Öppnar filen och sedan läser
-        read = csv.reader(file, delimiter = ";")
-        for rad in read: #läser filen och använder for sats för att lägga in i en lista
-            pisadata.append(rad)
-    return pisadata
 
 def nordland(list3):
 
@@ -22,54 +15,19 @@ def nordland(list3):
     return länder
 # Deluppgift 1: Funktioner från deluppgift 1 i ordning.
 # Skriv din kod här:
-def menytxt(): #Meny 
-    print("1. Läs in csv-filen")
-    print("2. Bästa resp. sämsta resultat år 2018")
-    print("3. Matematikkunskaper i norden år 2003 – 2018.")
-    print("4. Kontinuerligt förbättrat resp. försämrat år 2003 – 2018.")
-    print("5. Kvinnor presterar bättre än män under åren 2003–2018")
-    print("6. Avsluta programmet.")
-    print("Välj ett menyalternativ (1-6):")
-
-def meny(): # Använder whileloop för att skapa en meny. 
-    while True:
-        menytxt()
-        val = int(input()) #frågar efter num och använder if satser "Meny" för att göra beslut
-        if val == 1:
-            filnamn =input("Ange filnamn eller tryck bara Enter för att använda data.csv: ") or 'pisadata.csv'
-
-            pisadata= read_file(filnamn)
-            print(pisadata[:5])
-            
-        elif val ==2:
-            år2018(pisadata, 13)
-            
-        elif val ==3:
-            arsmedel(pisadata)
-            nordländer = nordland(pisadata)
-            medelvAr = (arsmedel(pisadata))
-            nordtabell(pisadata,medelvAr,nordländer)
-            nordtabellgraf(pisadata,medelvAr,nordländer)
-            pisadata= read_file(filnamn)
-            
-  
-            
-        elif val ==4:
-            battresamre(pisadata, True)  # För länder som har förbättrat sina resultat
-            battresamre(pisadata, False) # För länder som har försämrat sina resultat
-
-            
-        elif val ==5:
-            kvinna_man(pisadata)
-                   
-        elif val ==6:
-            break
+def read_file(filnamn):
+    pisadata=[]
+    with open (filnamn, "r") as file: #Öppnar filen och sedan läser
+        read = csv.reader(file, delimiter = ";")
+        for rad in read: #läser filen och använder for sats för att lägga in i en lista
+            pisadata.append(rad)
+    return pisadata
 
 
 # Deluppgift 2: Funktioner från deluppgift 2 i ordning.
 # Skriv din kod här:
     
-def år2018(lista,kol): # Använder mig av val så det inte behvös repeteras
+def år2018(lista,kol): 
     l18=[]
     for rad in lista[2:]:
         l18.append([rad[0], rad[kol]])
@@ -77,26 +35,26 @@ def år2018(lista,kol): # Använder mig av val så det inte behvös repeteras
     best = sorted(sortedlist[-10:], key=lambda x:x[-1], reverse=True)
     worst = sortedlist[:10]
     print("De tio länder som hade bäst resultat år 2018")
-    print("----------------")
-    print("Land   Resultat")
-    print("----------------")
+    print("-"*45)
+    print("Land                             Resultat")
+    print("-"*45)
     for rad in best:
-        print(rad[0],rad[1])
-    print("----------------")
+        print(f'{rad[0]:<15}{rad[1]:>23}')
+    print("-"*45)
     print("De tio länder som hade sämst resultat år 2018")
-    print("----------------")
-    print("Land   Resultat")
-    print("----------------")
+    print("-"*45)
+    print("Land                             Resultat")
+    print("-"*45)
     for rad in worst:
-        print(rad[0],rad[1])
-    print("----------------")
+        print(f'{rad[0]:<15}{rad[1]:>23}')
+    print("-"*45)
 
 
 # Deluppgift 3: Funktioner från deluppgift 3 i ordning.
 # Skriv din kod här:
 def kolumnmedel(list, columnindex):
     totalsum = 0
-    values = -1
+    values = 0
     
     for row in list[2:]:
         try:
@@ -105,26 +63,35 @@ def kolumnmedel(list, columnindex):
             values += 1 
         except ValueError:# om det går inte att ändra så hoppar den över.
             pass
-        print(values)
     return round(totalsum/values) #beräknar medelvärdet
-
-
-
 
 
 def arsmedel(list2):#Funktion för medelvärdet mellan 2003 till 2019
     armedel= []
-    for years in range(2003, 2019): # söker mellan 2003 till 2019
-        for index,item in enumerate(list2[0]): 
-            if str(years) in item or "medel" in item.lower(): 
-                columnindex2 = index
-                break
-        else:
-            continue
-        medelvärdet= kolumnmedel(list2, columnindex2) # använder oss av funktionen kolumnmedel för att beräkna medelvärdet 
-        armedel.append(medelvärdet)
+    flipdata1 = [list(row) for row in zip(*list2)]
+    j = -1
+    for i in flipdata1:
+        j+= 1
+        if i[1] == "medel":
+            medelvärdet= kolumnmedel(list2, j) # använder oss av funktionen kolumnmedel för att beräkna medelvärdet 
+            armedel.append(medelvärdet)
     return armedel
 
+
+def årtal(år):#Skapar årtal för använding 
+    nyår= []
+    årlist = []
+    for jj in år:
+        firstlist = jj[-6:]
+        årlist.append(firstlist)
+
+    flipdata2 = [list(row) for row in zip(*årlist)] #behöver vända så det underlättar kod
+    for år in flipdata2:
+        
+        nyår.append(år[0])
+    nyår = [int(i) for i in nyår]
+    return nyår
+    
 def nordtabell(list4,medel,länder):#Skapar Nordtabell 
     arsmedel2 = medel
     flipdata = länder
@@ -135,7 +102,7 @@ def nordtabell(list4,medel,länder):#Skapar Nordtabell
     flipdata2 = [list(row) for row in zip(*data)] #Har den för att matcha kod
 
     
-    år = [2018,2015,2012,2009,2006,2003] 
+    år = årtal(list4)
     
 
     print("\nKunskapsutveckling i matematik enligt PISA-undersökningen 2003 – 2018.") 
@@ -151,7 +118,7 @@ def nordtabell(list4,medel,länder):#Skapar Nordtabell
 def nordtabellgraf(list5,medel,länder): #skapar Nordgraf 
     arsmedel2 = medel
     nländer = länder
-    nyår = [2018,2015,2012,2009,2006,2003]
+    år = årtal(list5)
     länder_int = [[int(x) for x in sublist] for sublist in länder] #ändrar vä'rden till int för att användas i graf
     
     sweden = länder_int[0] #väljer ut länderna från norden
@@ -159,12 +126,12 @@ def nordtabellgraf(list5,medel,länder): #skapar Nordgraf
     denmark = länder_int[2]
     finland = länder_int[3]
     iceland = länder_int[4]
-    plt.plot(nyår, sweden,label="Swden") # skriver ut år och även land och label
-    plt.plot(nyår, norway,label="Norway")
-    plt.plot(nyår, denmark,label="Denmark")
-    plt.plot(nyår, finland,label="Finland")
-    plt.plot(nyår, iceland,label="Iceland")
-    plt.plot(nyår, medel,label="medel")
+    plt.plot(år, sweden,label="Swden") # skriver ut år och även land och label
+    plt.plot(år, norway,label="Norway")
+    plt.plot(år, denmark,label="Denmark")
+    plt.plot(år, finland,label="Finland")
+    plt.plot(år, iceland,label="Iceland")
+    plt.plot(år, medel,label="medel")
     plt.xlabel("År")
     plt.ylabel("Poäng")
     plt.title("PISA-undersökningen 2003 – 2018") 
@@ -216,7 +183,7 @@ def kvinna_man(data):
     print(f'{"År":<10}{"Land":<22}{"Kvinnor":<15}    {"Män"}')                              # skriver ut tabellhuvudet 
     print('-' * 76)                                                                         # skriver ut 76st -
     
-    for år in range(2003, 2018, 3):                                                         # yttre loop för åren mellan  2003 och 2018 med 3 år mellanrum
+    for år in range(2018,2002 , -3):                                                         # yttre loop för åren mellan  2003 och 2018 med 3 år mellanrum
         rad_1 = True                                                                        # flagga för att hålla reda på om det är den första matchade raden för det aktuella året.
         for rad in data[2:]:                                                                # inre loop för att genomgå över raderna i data  från index 2 
             diff = (2018 - år) / 3                                                          # beräknar skilladen mellan 2018 och det aktuella året och delar skilladen med 3         
@@ -227,18 +194,54 @@ def kvinna_man(data):
 
             if kvinnaP > manP:                                                              # kollar om kvionnor pestrerar bättre än män 
                 if rad_1:                                                                   # kontrollerar om det är den första matchade raden för det aktuella året 
-                    print(f'{år:<10}', end='')                                              # printar ut året 
+                    print(f'{år:<10}', end='')                                              # printar ut året
+                    rad_1=False 
                 else:                                                                       # om rad_1 är falsk  skrivs en tom sträng    
                     print(' ' * 10, end='')                                                 #''
                 print(f'{rad[0]:<22}  {kvinnaP:<17}{manP}')                                 # printar landets namn och värdet för män och kvinnors presterande
-                print()                                                                     # printar ett mellan rum mellan varje rad
         if not rad_1:
             print()
-            print('-'*76)
 
 
                     
 
 # Huvudprogram med Meny från deluppgift 0. Använd menyrubriker enl.uppgiftsbeskrivningen.
 # Skriv din kod här:
-meny()
+while True:
+    print("1. Läs in csv-filen")
+    print("2. Bästa resp. sämsta resultat år 2018")
+    print("3. Matematikkunskaper i norden år 2003 – 2018.")
+    print("4. Kontinuerligt förbättrat resp. försämrat år 2003 – 2018.")
+    print("5. Kvinnor presterar bättre än män under åren 2003–2018")
+    print("6. Avsluta programmet.")
+    print("Välj ett menyalternativ (1-6):")
+    val = int(input()) #frågar efter num och använder if satser "Meny" för att göra beslut
+    if val == 1:
+            filnamn =input("Ange filnamn eller tryck bara Enter för att använda data.csv: ") or 'pisadata.csv'
+
+            pisadata= read_file(filnamn)
+            print(pisadata[:5])
+            
+    elif val ==2:
+        år2018(pisadata, 13)
+        
+    elif val ==3:
+        arsmedel(pisadata)
+        nordländer = nordland(pisadata)
+        medelvAr = (arsmedel(pisadata))
+        nordtabell(pisadata,medelvAr,nordländer)
+        nordtabellgraf(pisadata,medelvAr,nordländer)
+        pisadata= read_file(filnamn)
+        
+  
+          
+    elif val ==4:
+        battresamre(pisadata, True)  # För länder som har förbättrat sina resultat
+        battresamre(pisadata, False) # För länder som har försämrat sina resultat
+
+            
+    elif val ==5:
+        kvinna_man(pisadata)
+                   
+    elif val ==6:
+        break
